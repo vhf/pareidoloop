@@ -1,3 +1,11 @@
+About this fork
+===============
+This fork displays imagemagick crop argument to easily crop the rendered image to the face detected only.
+
+It also displays these value during rendering.
+
+Useful if you want to crop the rendered image to get only the "face" part as detected by ccv.
+
 pareidoloop
 ===========
 
