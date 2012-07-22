@@ -13,6 +13,21 @@ Example
 * imagemagick -crop 617x617+158+57 617x617+158+57.png face.png
 * face.png contains face as seen highlighted under "fittest generation", at full resolution
 
+What you can do with this fork
+==============================
+I first generated the 30 faces you can see below :
+
+![sample cropped faces](http://cloud.github.com/downloads/vhf/pareidoloop/mosaic.png "out")
+
+Then I overlayed them to generate a less cubist face :
+
+![overlayed faces](http://cloud.github.com/downloads/vhf/pareidoloop/out.png "out")
+
+1. generate images
+2. crop them to get only the "facial" part of generated images (imagemagick)
+3. resize all of them to size of the smallest one (imagemagick)
+4. overlay them (imagemagick)
+
 pareidoloop
 ===========
 
