@@ -6,6 +6,13 @@ It also displays these value during rendering.
 
 Useful if you want to crop the rendered image to get only the "face" part as detected by ccv.
 
+Example 
+=======
+*Output size : 1000
+*File name is 617x617+158+57.png
+*imagemagick -crop 617x617+158+57 617x617+158+57.png face.png
+*face.png contains face as seen highlighted under "fittest generation", at full resolution
+
 pareidoloop
 ===========
 
