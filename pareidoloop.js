@@ -323,13 +323,13 @@ var Pareidoloop = new function() {
                    ctx.strokeStyle = "#00ff00";
                    ctx.strokeRect(this.bounds.x,this.bounds.y,this.bounds.width,this.bounds.height);
                    
-                   var c_t = Math.round((this.bounds.x+25)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
-				   var c_l = Math.round((this.bounds.y+25)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
+                   var adapted_x = Math.round((this.bounds.x+settings.CANVAS_SIZE/2)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
+				   var adapted_y = Math.round((this.bounds.y+settings.CANVAS_SIZE/2)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
 
-				   var c_h = Math.round((this.bounds.height)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
-				   var c_w = Math.round((this.bounds.width)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
-
-				   var new_imagemagick = c_w+"x"+c_h+"+"+c_l+"+"+c_t;
+				   var adapted_height = Math.round((this.bounds.height)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
+				   var adapted_width = Math.round((this.bounds.width)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
+				   
+				   var new_imagemagick = adapted_width+"x"+adapted_height+"+"+adapted_x+"+"+adapted_y;
 				   if(imagemagick != new_imagemagick) {
 				      imagemagick = new_imagemagick;
 				      imagemagickhtml.innerHTML = imagemagick;
