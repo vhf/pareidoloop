@@ -15,7 +15,7 @@ Example
 
 What you can do with this fork
 ==============================
-I first generated the 30 faces you can see below :
+I first generated the 30 faces you can see below : (already "face-cropped" here)
 
 ![sample cropped faces](http://cloud.github.com/downloads/vhf/pareidoloop/mosaic.png "out")
 
