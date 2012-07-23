@@ -21,7 +21,7 @@ I first generated the 30 faces you can see below : (already "face-cropped" here)
 
 Then I overlayed them to generate a less cubist face :
 
-![overlayed faces](http://cloud.github.com/downloads/vhf/pareidoloop/out.png "out")
+![overlayed faces](http://i.imgur.com/xmM6U.png "out") ![overlayed faces](http://cloud.github.com/downloads/vhf/pareidoloop/out.png "out")
 
 1. generate images
 2. crop them to get only the "facial" part of generated images (imagemagick)
