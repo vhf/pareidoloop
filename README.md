@@ -10,23 +10,35 @@ Example
 =======
 * Output size : 1000
 * File name is 617x617+158+57.png
-* imagemagick -crop 617x617+158+57 617x617+158+57.png face.png
+* `convert -crop 617x617+158+57 617x617+158+57.png face.png`
 * face.png contains face as seen highlighted under "fittest generation", at full resolution
 
 What you can do with this fork
 ==============================
-I first generated the 30 faces you can see below : (already "face-cropped" here)
 
-![sample cropped faces](http://cloud.github.com/downloads/vhf/pareidoloop/mosaic.png "out")
+1. Generate a bunch of pictures. (Here I did 50 faces of 2000x2000px, fitness=30, max generation=10000.)
+2. Crop the faces using imagemagick:
 
-Then I overlayed them to generate a less cubist face :
+    ```
+    convert -crop 1019x1019+240+47 images/1019x1019+240+47.png cropped/1019x1019+240+47.png 
+    convert -crop 1019x1019+267+157 images/1019x1019+267+157.png cropped/1019x1019+267+157.png
+    convert -crop 1019x1019+47+240 images/1019x1019+47+240.png cropped/1019x1019+47+240.png
+    …
+    ```
 
-![overlayed faces](http://i.imgur.com/xmM6U.png "out") ![overlayed faces](http://cloud.github.com/downloads/vhf/pareidoloop/out.png "out")
+3. Resize them all to the same size:
+    
+    ```
+    convert -resize 1000x cropped/1019x1019+240+47.png resized/1019x1019+240+47.png 
+    convert -resize 1000x cropped/1019x1019+267+157.png resized/1019x1019+267+157.png
+    convert -resize 1000x cropped/1019x1019+47+240.png resized/1019x1019+47+240.png
+    ```
 
-1. generate images
-2. crop them to get only the "facial" part of generated images (imagemagick)
-3. resize all of them to size of the smallest one (imagemagick)
-4. overlay them (imagemagick)
+4. Average them:
+
+    `convert resized/*.png -evaluate-sequence mean averaged.png`
+    
+    ![](https://i.imgur.com/jSNS3qQ.png)
 
 pareidoloop
 ===========

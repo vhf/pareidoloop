@@ -63,19 +63,6 @@ if (parallable === undefined) {
 	parallable.core = {};
 }
 
-function get_named_arguments(params, names) {
-	if (params.length > 1) {
-		var new_params = {};
-		for (var i = 0; i < names.length; i++)
-			new_params[names[i]] = params[i];
-		return new_params;
-	} else if (params.length == 1) {
-		return params[0];
-	} else {
-		return {};
-	}
-}
-
 var ccv = {
 	pre : function (image) {
 		if (image.tagName.toLowerCase() == "img") {
@@ -172,7 +159,12 @@ var ccv = {
 
 	detect_objects : parallable("ccv.js", function (canvas, cascade, interval, min_neighbors) {
 		if (this.shared !== undefined) {
-			var params = get_named_arguments(arguments, ["canvas", "cascade", "interval", "min_neighbors"]);
+			var params = {
+				canvas: arguments[0].canvas,
+				cascade: arguments[0].cascade,
+				interval: arguments[0].interval,
+				min_neighbors: arguments[0].min_neighbors,
+			};
 			this.shared.canvas = params.canvas;
 			this.shared.interval = params.interval;
 			this.shared.min_neighbors = params.min_neighbors;

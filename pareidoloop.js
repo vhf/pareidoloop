@@ -27,14 +27,14 @@ var Pareidoloop = new function() {
     }
 
     this.start = function(args) {
-        
+
         if (args) {
             if (args.outputSize) {
                 settings.OUTPUT_SIZE = args.outputSize;
             }
             if (args.outputCallback) {
-		outputCallback = args.outputCallback;
-	    }
+                outputCallback = args.outputCallback;
+            }
             if (args.confidenceThreshold) {
                 settings.CONFIDENCE_THRESHOLD = args.confidenceThreshold;
             }
@@ -72,10 +72,10 @@ var Pareidoloop = new function() {
         genCount = 0;
         lastImprovedGen = 0;
         seeding = true;
-    }   
+    }
 
     var rnd = function(mean, stdev) {
-        
+
         // pinched from http://www.protonfish.com/random.shtml
         return ((Math.random()*2-1)+(Math.random()*2-1)+(Math.random()*2-1))*stdev+mean;
     };
@@ -83,7 +83,7 @@ var Pareidoloop = new function() {
     var initCanvas = function(canvas, size) {
 
         canvas.width = canvas.height = size;
-        
+
         // set origin at center
         canvas.getContext("2d").setTransform(1, 0, 0, 1, size/2, size/2);
     }
@@ -101,7 +101,7 @@ var Pareidoloop = new function() {
             // create a bunch of randomish quads to kick things off
             var quads = [];
             for (var i=0; i<settings.INITIAL_POLYS; i++) {
-                
+
                 quads[i] = new Quad(
                         [rnd(0,settings.CANVAS_SIZE/10),rnd(-settings.CANVAS_SIZE/8,settings.CANVAS_SIZE/6)],
                         rnd(settings.CANVAS_SIZE/3,settings.CANVAS_SIZE/7.5),
@@ -117,19 +117,19 @@ var Pareidoloop = new function() {
         // if the new state is better, move to it no matter what.
         if(newScore > oldScore)
             return true;
-        
+
         // never accept a score that is not a face.
         if(newScore <= -999)
             return false;
 
         // otherwise, use a simulated annealing "temperature" to determine
         // whether or not to move.
-        
+
         // if it's the same, 50/50
         if(newScore == oldScore)
             return Math.random() < .5;
 
-        // the temperature ranges from 0.01 to 1.  The closer we are to 
+        // the temperature ranges from 0.01 to 1.  The closer we are to
         // the target, the lower the temperature.
         var temperature = Math.max(0.01, 1 - (oldScore / settings.CONFIDENCE_THRESHOLD));
 
@@ -139,6 +139,11 @@ var Pareidoloop = new function() {
 
         return Math.random() < probability;
     };
+
+    var tStart = +(new Date());
+    var tBegin = tStart;
+    var tEnd;
+    var tDiff = -1;
 
     var tick = function() {
 
@@ -163,7 +168,14 @@ var Pareidoloop = new function() {
         var fitness = faceB.measureFitness(canvasB);
 
         var fitnessScore = -999;
-        var message = "Gen: "+genCount+", ";
+        if (genCount % 100 === 0) {
+          tEnd = +(new Date())
+          tDiff = (tEnd - tStart) / 1000;
+          tStart = tEnd;
+          tLeft = ((settings.MAX_GENERATIONS - genCount) / 100) * tDiff;
+          tElapsed = (tEnd - tBegin) / 1000;
+        }
+        var message = "Gen: "+genCount+"(" + tDiff + ", running for: " + Math.round(tElapsed) + "s, left: " + Math.round(tLeft) + "s), ";
 
         if (fitness.numFaces > 1) {
             // only want to make one face
@@ -182,7 +194,7 @@ var Pareidoloop = new function() {
         if (shouldMove(fitnessScore, faceA.fitness)) {
 
             // new generation replaces previous fittest
-            
+
             seeding = false;
 
             clearCanvas(canvasA);
@@ -194,18 +206,18 @@ var Pareidoloop = new function() {
             faceA = faceB;
         }
 
-        if (genCount > settings.MAX_GENERATIONS || 
-                (genCount - lastImprovedGen) > settings.MAX_GENS_WITHOUT_IMPROVEMENT || 
+        if (genCount > settings.MAX_GENERATIONS ||
+                (genCount - lastImprovedGen) > settings.MAX_GENS_WITHOUT_IMPROVEMENT ||
                 fitnessScore > settings.CONFIDENCE_THRESHOLD) {
 
             // render finished face out as an image
-            
+
             var outCtx = canvasOut.getContext("2d");
             var outScale = settings.OUTPUT_SIZE/settings.CANVAS_SIZE;
             outCtx.scale(outScale, outScale);
             faceA.draw(outCtx);
             var dataUrl = canvasOut.toDataURL();
-            
+
             var outputImg = document.createElement("img");
             outputImg.src = dataUrl;
 
@@ -235,9 +247,9 @@ var Pareidoloop = new function() {
         var clip = function(x, min, max) {
             return Math.min(max, Math.max(min, x));
         };
-        
+
         this.draw = function(ctx) {
-            
+
                    ctx.save();
                    ctx.translate(origin[0],origin[1]);
                    ctx.scale(scale,scale);
@@ -259,26 +271,26 @@ var Pareidoloop = new function() {
 
                    ctx.fill();
                    ctx.restore();
-        } 
+        }
     };
 
     var Face = function(quads) {
-        
+
                this.quads = quads;
 
                this.fitness = -999;
 
-               this.bounds = { 
-                   x: 0, 
-                   y: 0, 
-                   width: settings.CANVAS_SIZE, 
+               this.bounds = {
+                   x: 0,
+                   y: 0,
+                   width: settings.CANVAS_SIZE,
                    height: settings.CANVAS_SIZE
                };
 
                this.produceChild = function() {
 
                    var childQuads = [];
-                   
+
                    for (var i=0; i<this.quads.length; i++) {
                        childQuads[i] = this.quads[i];
                    }
@@ -297,7 +309,7 @@ var Pareidoloop = new function() {
                             ];
 
                        var newScale =  35 > this.fitness ? Math.sqrt(Math.abs(35-this.fitness)) : 1;
-                       
+
                        // scale by detected area.
                        newScale *= this.bounds.width / 25;
 
@@ -322,13 +334,13 @@ var Pareidoloop = new function() {
                    ctx.globalAlpha = 1;
                    ctx.strokeStyle = "#00ff00";
                    ctx.strokeRect(this.bounds.x,this.bounds.y,this.bounds.width,this.bounds.height);
-                   
+
                    var adapted_x = Math.round((this.bounds.x+settings.CANVAS_SIZE/2)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
 				   var adapted_y = Math.round((this.bounds.y+settings.CANVAS_SIZE/2)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
 
 				   var adapted_height = Math.round((this.bounds.height)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
 				   var adapted_width = Math.round((this.bounds.width)/settings.CANVAS_SIZE*settings.OUTPUT_SIZE);
-				   
+
 				   var new_imagemagick = adapted_width+"x"+adapted_height+"+"+adapted_x+"+"+adapted_y;
 				   if(imagemagick != new_imagemagick) {
 				      imagemagick = new_imagemagick;
